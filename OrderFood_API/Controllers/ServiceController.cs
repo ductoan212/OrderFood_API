@@ -64,5 +64,34 @@ namespace OrderFood_API.Controllers
             else
                 return NotFound();
         }
+
+        [Route("api/ServiceController/checkDangNhap")]
+        [HttpGet]
+        public IHttpActionResult checkDangNhap(string TenDN, string MatKhau)
+        {
+            var param = new Dictionary<string, object>() {
+                { "TenDN", TenDN },
+                { "MatKhau", MatKhau }
+            };
+            DataTable kq = Database.Read_Table_SP("SP_CheckDangNhap", param);
+            if (kq != null && kq.Rows.Count > 0)
+                return Ok(true);
+            else
+                return Ok(false);
+        }
+
+        [Route("api/ServiceController/checkTenDNTonTai")]
+        [HttpGet]
+        public IHttpActionResult checkTenDNTonTai(string TenDN)
+        {
+            var param = new Dictionary<string, object>() {
+                { "TenDN", TenDN }
+            };
+            DataTable kq = Database.Read_Table_SP("SP_CheckTenDNTonTai", param);
+            if (kq == null || kq.Rows.Count == 0)
+                return Ok(false);
+            else
+                return Ok(true);
+        }
     }
 }
