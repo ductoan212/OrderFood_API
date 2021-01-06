@@ -65,6 +65,34 @@ namespace OrderFood_API.Controllers
                 return NotFound();
         }
 
+        [Route("api/ServiceController/getHoaDonTheoKH")]
+        [HttpGet]
+        public IHttpActionResult getHoaDonTheoKH(int MaKH)
+        {
+            var param = new Dictionary<string, object>() {
+                { "MaKH", MaKH }
+            };
+            DataTable kq = Database.Read_Table_SP("SP_GetHoaDonTheoKH", param);
+            if (kq != null && kq.Rows.Count >= 0)
+                return Ok(kq);
+            else
+                return NotFound();
+        }
+
+        [Route("api/ServiceController/getCTHDTheoHD")]
+        [HttpGet]
+        public IHttpActionResult getCTHDTheoHD(int MaHD)
+        {
+            var param = new Dictionary<string, object>() {
+                { "MaHD", MaHD }
+            };
+            DataTable kq = Database.Read_Table_SP("SP_GetCTHDTheoHD", param);
+            if (kq != null && kq.Rows.Count >= 0)
+                return Ok(kq);
+            else
+                return NotFound();
+        }
+
         [Route("api/ServiceController/checkDangNhap")]
         [HttpGet]
         public IHttpActionResult checkDangNhap(string TenDN, string MatKhau)
