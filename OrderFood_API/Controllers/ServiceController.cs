@@ -93,5 +93,34 @@ namespace OrderFood_API.Controllers
             else
                 return Ok(true);
         }
+
+        [Route("api/ServiceController/createKhachHang")]
+        [HttpPost]
+        public IHttpActionResult createKhachHang(
+            string TenDN,
+            string MatKhau,
+            string HoTen,
+            string Email,
+            string DiaChi,
+            int Tuoi,
+            string Sdt,
+            bool GioiTinh)
+        {
+            var param = new Dictionary<string, object>() {
+                { "TenDN", TenDN },
+                { "MatKhau", MatKhau },
+                { "HoTen", HoTen },
+                { "Email", Email },
+                { "DiaChi", DiaChi },
+                { "Tuoi", Tuoi },
+                { "Sdt", Sdt },
+                { "GioiTinh", GioiTinh },
+            };
+            DataTable kq = Database.Read_Table_SP("SP_CreateKhachHang", param);
+            if (kq != null)
+                return Ok(true);
+            else
+                return NotFound();
+        }
     }
 }
