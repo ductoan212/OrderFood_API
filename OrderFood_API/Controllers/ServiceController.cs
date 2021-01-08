@@ -11,12 +11,6 @@ namespace OrderFood_API.Controllers
 {
     public class ServiceController : ApiController
     {
-        [Route("api/ServiceController/DemoAPI")]
-        [HttpGet]
-        public IHttpActionResult DemoAPI(string name)
-        {
-            return Ok("Xin chao " + name);
-        }
 
         [Route("api/ServiceController/getKhachHang")]
         [HttpGet]
@@ -28,7 +22,19 @@ namespace OrderFood_API.Controllers
             else
                 return NotFound();
         }
-
+        [Route("api/ServiceController/getKhachHangTheoTenDN")]
+        [HttpGet]
+        public IHttpActionResult getKhachHangTheoTenDN(string TenDN)
+        {
+            var param = new Dictionary<string, object>() {
+                { "TenDN", TenDN }
+            };
+            DataTable kq = Database.Read_Table_SP("SP_GetKhachHangTheoTenDN", param);
+            if (kq != null && kq.Rows.Count >= 0)
+                return Ok(kq);
+            else
+                return NotFound();
+        }
         [Route("api/ServiceController/getLoaiMon")]
         [HttpGet]
         public IHttpActionResult getLoaiMon()
@@ -93,6 +99,20 @@ namespace OrderFood_API.Controllers
                 return NotFound();
         }
 
+        [Route("api/ServiceController/getYeuThichTheoKH")]
+        [HttpGet]
+        public IHttpActionResult getYeuThichTheoKH(int MaKH)
+        {
+            var param = new Dictionary<string, object>() {
+                { "MaKH", MaKH }
+            };
+            DataTable kq = Database.Read_Table_SP("SP_GetYeuThichTheoKH", param);
+            if (kq != null && kq.Rows.Count >= 0)
+                return Ok(kq);
+            else
+                return NotFound();
+        }
+
         [Route("api/ServiceController/checkDangNhap")]
         [HttpGet]
         public IHttpActionResult checkDangNhap(string TenDN, string MatKhau)
@@ -123,7 +143,7 @@ namespace OrderFood_API.Controllers
         }
 
         [Route("api/ServiceController/createKhachHang")]
-        [HttpPost]
+        [HttpGet]
         public IHttpActionResult createKhachHang(
             string TenDN,
             string MatKhau,
@@ -145,6 +165,74 @@ namespace OrderFood_API.Controllers
                 { "GioiTinh", GioiTinh },
             };
             DataTable kq = Database.Read_Table_SP("SP_CreateKhachHang", param);
+            if (kq != null)
+                return Ok(true);
+            else
+                return NotFound();
+        }
+
+        [Route("api/ServiceController/createHoaDon")]
+        [HttpGet]
+        public IHttpActionResult createHoaDon(
+            int MaKH)
+        {
+            var param = new Dictionary<string, object>() {
+                { "MaKH", MaKH },
+            };
+            DataTable kq = Database.Read_Table_SP("SP_CreateHoaDon", param);
+            if (kq != null)
+                return Ok(true);
+            else
+                return NotFound();
+        }
+
+        [Route("api/ServiceController/createCTHD")]
+        [HttpGet]
+        public IHttpActionResult createCTHD(
+            int MaHD,
+            int MaMA,
+            int SoLuong)
+        {
+            var param = new Dictionary<string, object>() {
+                { "MaHD", MaHD },
+                { "MaMA", MaMA },
+                { "SoLuong", SoLuong },
+            };
+            DataTable kq = Database.Read_Table_SP("SP_CreateCTHD", param);
+            if (kq != null)
+                return Ok(true);
+            else
+                return NotFound();
+        }
+
+        [Route("api/ServiceController/createYeuThich")]
+        [HttpGet]
+        public IHttpActionResult createYeuThich(
+            int MaKH,
+            int MaMA,
+            string GhiChu)
+        {
+            var param = new Dictionary<string, object>() {
+                { "MaKH", MaKH },
+                { "MaMA", MaMA },
+                { "GhiChu", GhiChu },
+            };
+            DataTable kq = Database.Read_Table_SP("SP_CreateYeuThich", param);
+            if (kq != null)
+                return Ok(true);
+            else
+                return NotFound();
+        }
+
+        [Route("api/ServiceController/updateTrangThaiHD")]
+        [HttpGet]
+        public IHttpActionResult updateTrangThaiHD(
+            int MaHD)
+        {
+            var param = new Dictionary<string, object>() {
+                { "MaHD", MaHD },
+            };
+            DataTable kq = Database.Read_Table_SP("SP_UpdateTrangThaiHD", param);
             if (kq != null)
                 return Ok(true);
             else
