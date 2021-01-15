@@ -12,6 +12,7 @@ namespace OrderFood_API.Controllers
     public class ServiceController : ApiController
     {
 
+        //================================= Get =================================\\
         [Route("api/ServiceController/getKhachHang")]
         [HttpGet]
         public IHttpActionResult getKhachHang()
@@ -85,6 +86,34 @@ namespace OrderFood_API.Controllers
                 return NotFound();
         }
 
+        [Route("api/ServiceController/getHoaDonDaTTTheoKH")]
+        [HttpGet]
+        public IHttpActionResult getHoaDonDaTTTheoKH(int MaKH)
+        {
+            var param = new Dictionary<string, object>() {
+                { "MaKH", MaKH }
+            };
+            DataTable kq = Database.Read_Table_SP("SP_GetDHDaTTTheoKH", param);
+            if (kq != null && kq.Rows.Count >= 0)
+                return Ok(kq);
+            else
+                return NotFound();
+        }
+
+        [Route("api/ServiceController/getHoaDonChuaTTTheoKH")]
+        [HttpGet]
+        public IHttpActionResult getHoaDonChuaTTTheoKH(int MaKH)
+        {
+            var param = new Dictionary<string, object>() {
+                { "MaKH", MaKH }
+            };
+            DataTable kq = Database.Read_Table_SP("SP_GetDHChuaTTTheoKH", param);
+            if (kq != null && kq.Rows.Count >= 0)
+                return Ok(kq);
+            else
+                return NotFound();
+        }
+
         [Route("api/ServiceController/getCTHDTheoHD")]
         [HttpGet]
         public IHttpActionResult getCTHDTheoHD(int MaHD)
@@ -113,6 +142,8 @@ namespace OrderFood_API.Controllers
                 return NotFound();
         }
 
+
+        //================================= Check =================================\\
         [Route("api/ServiceController/checkDangNhap")]
         [HttpGet]
         public IHttpActionResult checkDangNhap(string TenDN, string MatKhau)
@@ -142,6 +173,7 @@ namespace OrderFood_API.Controllers
                 return Ok(true);
         }
 
+        //================================= Create =================================\\
         [Route("api/ServiceController/createKhachHang")]
         [HttpGet]
         public IHttpActionResult createKhachHang(
@@ -181,7 +213,7 @@ namespace OrderFood_API.Controllers
             };
             DataTable kq = Database.Read_Table_SP("SP_CreateHoaDon", param);
             if (kq != null)
-                return Ok(true);
+                return Ok(kq);
             else
                 return NotFound();
         }
@@ -224,6 +256,7 @@ namespace OrderFood_API.Controllers
                 return NotFound();
         }
 
+        //================================= Update =================================\\
         [Route("api/ServiceController/updateTrangThaiHD")]
         [HttpGet]
         public IHttpActionResult updateTrangThaiHD(
