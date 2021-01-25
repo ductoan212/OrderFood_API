@@ -23,6 +23,7 @@ namespace OrderFood_API.Controllers
             else
                 return NotFound();
         }
+        
         [Route("api/ServiceController/getKhachHangTheoTenDN")]
         [HttpGet]
         public IHttpActionResult getKhachHangTheoTenDN(string TenDN)
@@ -36,6 +37,21 @@ namespace OrderFood_API.Controllers
             else
                 return NotFound();
         }
+
+        [Route("api/ServiceController/getSoDuKH")]
+        [HttpGet]
+        public IHttpActionResult getSoDuKH(string TenDN)
+        {
+            var param = new Dictionary<string, object>() {
+                { "TenDN", TenDN }
+            };
+            DataTable kq = Database.Read_Table_SP("SP_GetKhachHangTheoTenDN", param);
+            if (kq != null && kq.Rows.Count >= 1)
+                return Ok(kq.Rows[0][6]);
+            else
+                return NotFound();
+        }
+
         [Route("api/ServiceController/getLoaiMon")]
         [HttpGet]
         public IHttpActionResult getLoaiMon()
@@ -74,7 +90,7 @@ namespace OrderFood_API.Controllers
 
         [Route("api/ServiceController/getHoaDonTheoKH")]
         [HttpGet]
-        public IHttpActionResult getHoaDonTheoKH(int MaKH)
+        public IHttpActionResult getHoaDonTheoKH(string MaKH)
         {
             var param = new Dictionary<string, object>() {
                 { "MaKH", MaKH }
@@ -88,7 +104,7 @@ namespace OrderFood_API.Controllers
 
         [Route("api/ServiceController/getHoaDonDaTTTheoKH")]
         [HttpGet]
-        public IHttpActionResult getHoaDonDaTTTheoKH(int MaKH)
+        public IHttpActionResult getHoaDonDaTTTheoKH(string MaKH)
         {
             var param = new Dictionary<string, object>() {
                 { "MaKH", MaKH }
@@ -102,7 +118,7 @@ namespace OrderFood_API.Controllers
 
         [Route("api/ServiceController/getHoaDonChuaTTTheoKH")]
         [HttpGet]
-        public IHttpActionResult getHoaDonChuaTTTheoKH(int MaKH)
+        public IHttpActionResult getHoaDonChuaTTTheoKH(string MaKH)
         {
             var param = new Dictionary<string, object>() {
                 { "MaKH", MaKH }
@@ -130,7 +146,7 @@ namespace OrderFood_API.Controllers
 
         [Route("api/ServiceController/getYeuThichTheoKH")]
         [HttpGet]
-        public IHttpActionResult getYeuThichTheoKH(int MaKH)
+        public IHttpActionResult getYeuThichTheoKH(string MaKH)
         {
             var param = new Dictionary<string, object>() {
                 { "MaKH", MaKH }
@@ -143,17 +159,63 @@ namespace OrderFood_API.Controllers
         }
 
 
+        [Route("api/ServiceController/getMonAnTheoTuKhoa")]
+        [HttpGet]
+        public IHttpActionResult getMonAnTheoTuKhoa(string Keyword)
+        {
+            Keyword = "%" + Keyword + "%";
+            var param = new Dictionary<string, object>() {
+                { "Keyword", Keyword }
+            };
+            DataTable kq = Database.Read_Table_SP("SP_SearchMonAn", param);
+            if (kq != null && kq.Rows.Count >= 0)
+                return Ok(kq);
+            else
+                return NotFound();
+        }
+
+        [Route("api/ServiceController/getMonGiamGia")]
+        [HttpGet]
+        public IHttpActionResult getMonGiamGia()
+        {
+            DataTable kq = Database.Read_Table_SP("SP_GetMonGiamGia");
+            if (kq != null && kq.Rows.Count >= 0)
+                return Ok(kq);
+            else
+                return NotFound();
+        }
+
+        [Route("api/ServiceController/getMonMuaNhieu")]
+        [HttpGet]
+        public IHttpActionResult getMonMuaNhieu()
+        {
+            DataTable kq = Database.Read_Table_SP("SP_GetMonMuaNhieu");
+            if (kq != null && kq.Rows.Count >= 0)
+                return Ok(kq);
+            else
+                return NotFound();
+        }
+
+        [Route("api/ServiceController/getMonMoi")]
+        [HttpGet]
+        public IHttpActionResult getMonMoi()
+        {
+            DataTable kq = Database.Read_Table_SP("SP_GetMonMoi");
+            if (kq != null && kq.Rows.Count >= 0)
+                return Ok(kq);
+            else
+                return NotFound();
+        }
         //================================= Check =================================\\
         [Route("api/ServiceController/checkDangNhap")]
         [HttpGet]
         public IHttpActionResult checkDangNhap(string TenDN, string MatKhau)
         {
             var param = new Dictionary<string, object>() {
-                { "TenDN", TenDN },
-                { "MatKhau", MatKhau }
+                { "TenDN", TenDN }
             };
-            DataTable kq = Database.Read_Table_SP("SP_CheckDangNhap", param);
-            if (kq != null && kq.Rows.Count > 0)
+            DataTable kq = Database.Read_Table_SP("SP_GetKhachHangTheoTenDN", param);
+            if (kq != null && kq.Rows.Count > 0 && kq.Rows[0][1].ToString()==MatKhau)
                 return Ok(true);
             else
                 return Ok(false);
@@ -166,7 +228,7 @@ namespace OrderFood_API.Controllers
             var param = new Dictionary<string, object>() {
                 { "TenDN", TenDN }
             };
-            DataTable kq = Database.Read_Table_SP("SP_CheckTenDNTonTai", param);
+            DataTable kq = Database.Read_Table_SP("SP_GetKhachHangTheoTenDN", param);
             if (kq == null || kq.Rows.Count == 0)
                 return Ok(false);
             else
@@ -177,24 +239,20 @@ namespace OrderFood_API.Controllers
         [Route("api/ServiceController/createKhachHang")]
         [HttpGet]
         public IHttpActionResult createKhachHang(
-            string TenDN,
+            string MaKH,
             string MatKhau,
             string HoTen,
             string Email,
             string DiaChi,
-            int Tuoi,
-            string Sdt,
-            bool GioiTinh)
+            string Sdt)
         {
             var param = new Dictionary<string, object>() {
-                { "TenDN", TenDN },
+                { "MaKH", MaKH },
                 { "MatKhau", MatKhau },
                 { "HoTen", HoTen },
                 { "Email", Email },
                 { "DiaChi", DiaChi },
-                { "Tuoi", Tuoi },
                 { "Sdt", Sdt },
-                { "GioiTinh", GioiTinh },
             };
             DataTable kq = Database.Read_Table_SP("SP_CreateKhachHang", param);
             if (kq != null)
@@ -205,8 +263,7 @@ namespace OrderFood_API.Controllers
 
         [Route("api/ServiceController/createHoaDon")]
         [HttpGet]
-        public IHttpActionResult createHoaDon(
-            int MaKH)
+        public IHttpActionResult createHoaDon(string MaKH)
         {
             var param = new Dictionary<string, object>() {
                 { "MaKH", MaKH },
@@ -240,7 +297,7 @@ namespace OrderFood_API.Controllers
         [Route("api/ServiceController/createYeuThich")]
         [HttpGet]
         public IHttpActionResult createYeuThich(
-            int MaKH,
+            string MaKH,
             int MaMA,
             string GhiChu)
         {
@@ -260,12 +317,61 @@ namespace OrderFood_API.Controllers
         [Route("api/ServiceController/updateTrangThaiHD")]
         [HttpGet]
         public IHttpActionResult updateTrangThaiHD(
-            int MaHD)
+            int MaHD,
+            int TrangThai)
         {
             var param = new Dictionary<string, object>() {
                 { "MaHD", MaHD },
+                { "TrangThai", TrangThai },
             };
             DataTable kq = Database.Read_Table_SP("SP_UpdateTrangThaiHD", param);
+            if (kq != null)
+                return Ok(true);
+            else
+                return NotFound();
+        }
+
+        [Route("api/ServiceController/updateCTHD")]
+        [HttpGet]
+        public IHttpActionResult updateCTHD(int MaHD, int MaMA, int SoLuong)
+        {
+            var param = new Dictionary<string, object>() {
+                { "MaHD", MaHD },
+                { "MaMA", MaMA },
+                { "SoLuong", SoLuong },
+            };
+            DataTable kq = Database.Read_Table_SP("SP_UpdateCTHD", param);
+            if (kq != null)
+                return Ok(true);
+            else
+                return NotFound();
+        }
+
+        [Route("api/ServiceController/updateSoDuKH")]
+        [HttpGet]
+        public IHttpActionResult updateSoDuKH(string MaKH, decimal SoDuNew)
+        {
+            var param = new Dictionary<string, object>() {
+                { "MaKH", MaKH },
+                { "SoDuNew", SoDuNew },
+            };
+            DataTable kq = Database.Read_Table_SP("SP_UpdateSoDuKH", param);
+            if (kq != null)
+                return Ok(true);
+            else
+                return NotFound();
+        }
+
+        //================================= Delete =================================\\
+        [Route("api/ServiceController/deleteCTHD")]
+        [HttpGet]
+        public IHttpActionResult deleteCTHD(int MaHD, int MaMA)
+        {
+            var param = new Dictionary<string, object>() {
+                { "MaHD", MaHD },
+                { "MaMA", MaMA },
+            };
+            DataTable kq = Database.Read_Table_SP("SP_DeleteCTHD", param);
             if (kq != null)
                 return Ok(true);
             else
